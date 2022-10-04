@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const { application } = require('express');
 const talkerRoutes = require('./routes/talkerRoutes');
 
 const app = express();
@@ -16,7 +15,7 @@ app.get('/', (_request, response) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Online');
+  console.log(`Online on port ${PORT}`);
 });
 
 module.exports = app;
