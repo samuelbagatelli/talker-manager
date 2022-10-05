@@ -39,4 +39,26 @@ router.post('/',
     res.status(201).json(newTalker);
 });
 
+router.put('/:id',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  rateValidation,
+  watchedAtValidation,
+  (req, res) => {
+    const id = Number(req.params.id);
+    const response = JSON.parse(fs.readFileSync(pathname));
+    const attTalker = {
+      id,
+      ...req.body,
+    };
+    const indexOfId = response.findIndex((elem) => elem.id === id);
+    console.log(indexOfId);
+    response.splice(indexOfId, 1, attTalker);
+    console.log(response);
+    fs.writeFileSync(pathname, JSON.stringify(response));
+    res.status(200).json(attTalker);
+});
+
 module.exports = router;
