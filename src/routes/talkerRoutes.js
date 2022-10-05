@@ -1,6 +1,10 @@
 const router = require('express').Router();
 const fs = require('fs');
 const path = require('path');
+const ageValidation = require('../middlewares/age');
+const nameValidation = require('../middlewares/name');
+const { talkValidation, watchedAtValidation, rateValidation } = require('../middlewares/talk');
+const tokenValidation = require('../middlewares/token');
 
 const pathname = path.resolve(__dirname, '../talker.json');
 
@@ -16,6 +20,23 @@ router.get('/:id', (req, res) => {
     res.status(200).json(results);
   }
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+});
+
+router.post('/',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  rateValidation,
+  watchedAtValidation,
+  (req, res) => {
+    const response = JSON.parse(fs.readFileSync(pathname));
+    const newTalker = {
+      id: response.length + 1,
+      ...req.body,
+    };
+    if (req.body) fs.writeFileSync(pathname, JSON.stringify([...response, newTalker]));
+    res.status(201).json(newTalker);
 });
 
 module.exports = router;
