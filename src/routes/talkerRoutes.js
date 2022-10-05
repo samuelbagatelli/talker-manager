@@ -54,11 +54,20 @@ router.put('/:id',
       ...req.body,
     };
     const indexOfId = response.findIndex((elem) => elem.id === id);
-    console.log(indexOfId);
     response.splice(indexOfId, 1, attTalker);
-    console.log(response);
     fs.writeFileSync(pathname, JSON.stringify(response));
     res.status(200).json(attTalker);
+});
+
+router.delete('/:id', tokenValidation, (req, res) => {
+  const id = Number(req.params.id);
+  const response = JSON.parse(fs.readFileSync(pathname));
+  console.log(response);
+  const indexOfId = response.findIndex((elem) => elem.id === id);
+  response.splice(indexOfId, 1);
+  console.log(response);
+  fs.writeFileSync(pathname, JSON.stringify(response));
+  res.sendStatus(204);
 });
 
 module.exports = router;
